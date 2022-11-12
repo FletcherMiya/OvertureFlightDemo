@@ -8,9 +8,10 @@ public class FlightControl : MonoBehaviour
     [SerializeField] private MouseAimControl controller = null;
 
     [Header("Physics")]
-    [Tooltip("Force to push plane forwards with")] public float thrust = 100f;
-    [Tooltip("Pitch, Yaw, Roll")] public Vector3 turnTorque = new Vector3(90f, 25f, 45f);
-    [Tooltip("Multiplier for all forces")] public float forceMult = 1000f;
+    [Tooltip("Force to push plane forwards with")] public float[] thrust = new float[] { 200f, 350f, 500f, 700f };
+    [Tooltip("Current thrust")] public int throttle = 1;
+    [Tooltip("Pitch, Yaw, Roll")] public Vector3 turnTorque = new Vector3(1f, 0.5f, 1.5f);
+    [Tooltip("Multiplier for all forces")] public float forceMult = 10f;
 
     [Header("Autopilot")]
     [Tooltip("Sensitivity for autopilot flight.")] public float sensitivity = 5f;
@@ -42,6 +43,16 @@ public class FlightControl : MonoBehaviour
         // autopilot is trying to do.
         rollOverride = false;
         pitchOverride = false;
+
+        if (Input.GetKeyUp(KeyCode.LeftShift) && throttle < (thrust.Length - 1))
+        {
+            throttle++;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftControl) && throttle > 0)
+        {
+            throttle--;
+        }
 
         float keyboardRoll = Input.GetAxis("Horizontal");
         if (Mathf.Abs(keyboardRoll) > .25f)
@@ -118,7 +129,7 @@ public class FlightControl : MonoBehaviour
     {
         // Ultra simple flight where the plane just gets pushed forward and manipulated
         // with torques to turn.
-        rigid.AddRelativeForce(Vector3.forward * thrust * forceMult, ForceMode.Force);
+        rigid.AddRelativeForce(Vector3.forward * thrust[throttle] * forceMult, ForceMode.Force);
         rigid.AddRelativeTorque(new Vector3(turnTorque.x * pitch,
                                             turnTorque.y * yaw,
                                             -turnTorque.z * roll) * forceMult,

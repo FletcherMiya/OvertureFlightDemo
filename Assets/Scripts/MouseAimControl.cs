@@ -14,19 +14,6 @@ public class MouseAimControl : MonoBehaviour
     [Tooltip("Transform of the object the mouse rotates to generate MouseAim position")]
     private Transform mouseAim = null;
 
-    [Header("Options")]
-    [SerializeField]
-    [Tooltip("Follow aircraft using fixed update loop")]
-    private bool useFixed = true;
-
-    [SerializeField]
-    [Tooltip("How quickly the camera tracks the mouse aim point.")]
-    private float camSmoothSpeed = 5f;
-
-    [SerializeField]
-    [Tooltip("Mouse sensitivity for the mouse flight target")]
-    private float mouseSensitivity = 3f;
-
     [SerializeField]
     [Tooltip("How far the boresight and mouse flight are from the aircraft")]
     private float aimDistance = 500f;
@@ -66,7 +53,7 @@ public class MouseAimControl : MonoBehaviour
             {
                 return isMouseAimFrozen
                     ? GetFrozenMouseAimPos()
-                    : mouseAim.position + (mouseAim.forward * aimDistance);
+                    : mouseAim.position;
             }
             else
             {
@@ -90,8 +77,6 @@ public class MouseAimControl : MonoBehaviour
 
     private void Update()
     {
-        if (useFixed == false)
-            UpdateCameraPos();
 
         Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition + Vector3.forward * 36f);
         aimDistance = Vector3.Distance(aircraft.transform.position, mouseWorldPosition);
@@ -103,8 +88,7 @@ public class MouseAimControl : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (useFixed == true)
-            UpdateCameraPos();
+
     }
 
     private void RotateRig()
@@ -151,50 +135,4 @@ public class MouseAimControl : MonoBehaviour
         }
     }
 
-    // Thanks to Rory Driscoll
-    // http://www.rorydriscoll.com/2016/03/07/frame-rate-independent-damping-using-lerp/
-    /// <summary>
-    /// Creates dampened motion between a and b that is framerate independent.
-    /// </summary>
-    /// <param name="a">Initial parameter</param>
-    /// <param name="b">Target parameter</param>
-    /// <param name="lambda">Smoothing factor</param>
-    /// <param name="dt">Time since last damp call</param>
-    /// <returns></returns>
-    private Quaternion Damp(Quaternion a, Quaternion b, float lambda, float dt)
-    {
-        return Quaternion.Slerp(a, b, 1 - Mathf.Exp(-lambda * dt));
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (showDebugInfo == true)
-        {
-            Color oldColor = Gizmos.color;
-
-            // Draw the boresight position.
-            if (aircraft != null)
-            {
-                Gizmos.color = Color.white;
-                Gizmos.DrawWireSphere(BoresightPos, 10f);
-            }
-
-            if (mouseAim != null)
-            {
-                // Draw the position of the mouse aim position.
-                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(MouseAimPos, 10f);
-
-                // Draw axes for the mouse aim transform.
-                Gizmos.color = Color.blue;
-                Gizmos.DrawRay(mouseAim.position, mouseAim.forward * 50f);
-                Gizmos.color = Color.green;
-                Gizmos.DrawRay(mouseAim.position, mouseAim.up * 50f);
-                Gizmos.color = Color.red;
-                Gizmos.DrawRay(mouseAim.position, mouseAim.right * 50f);
-            }
-
-            Gizmos.color = oldColor;
-        }
-    }
 }
