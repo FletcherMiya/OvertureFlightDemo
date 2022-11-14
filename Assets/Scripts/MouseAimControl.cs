@@ -18,11 +18,6 @@ public class MouseAimControl : MonoBehaviour
     [Tooltip("How far the boresight and mouse flight are from the aircraft")]
     private float aimDistance = 500f;
 
-    [Space]
-    [SerializeField]
-    [Tooltip("How far the boresight and mouse flight are from the aircraft")]
-    private bool showDebugInfo = false;
-
     private Vector3 frozenDirection = Vector3.forward;
     private bool isMouseAimFrozen = false;
 
