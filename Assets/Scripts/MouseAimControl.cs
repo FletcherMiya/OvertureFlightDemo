@@ -78,7 +78,7 @@ public class MouseAimControl : MonoBehaviour
 
         mouseAim.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition + Vector3.forward * 36f);
 
-        RotateRig();
+        //RotateRig();
     }
 
     private void FixedUpdate()
@@ -101,11 +101,11 @@ public class MouseAimControl : MonoBehaviour
         }
 
         // Mouse input.
-        Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition + Vector3.forward * 36f);
+        //Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition + Vector3.forward * 36f);
 
-        float angle = angleBetweenTwoPoints(aircraft.transform.position, mouseWorldPosition);
+        //float angle = angleBetweenTwoPoints(aircraft.transform.position, mouseWorldPosition);
 
-        mouseAim.rotation = Quaternion.Euler(new Vector3(0f, angle, 0f));
+        //mouseAim.rotation = Quaternion.Euler(new Vector3(0f, angle, 0f));
     }
 
     private float angleBetweenTwoPoints(Vector3 a, Vector3 b)
